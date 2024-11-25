@@ -1,12 +1,15 @@
 import tkinter as tk
 from tkinter import messagebox
+from typing import List, Optional
+
 
 class BinarySearchDemo:
+    """Clase que contiene los atributos y métodos de ejecución necesarios del algoritmo de búsqueda binaria."""
     def __init__(self, root):
         self.root = root
         self.root.title("Demostración de Búsqueda Binaria")
         
-        # Crear widgets para entrada de datos
+        # se crean los widgets para entrada de datos
         tk.Label(root, text="Lista de números ordenados (separados por comas):").grid(row=0, column=0, padx=10, pady=5)
         self.list_entry = tk.Entry(root, width=40)
         self.list_entry.grid(row=0, column=1, padx=10, pady=5)
@@ -15,15 +18,15 @@ class BinarySearchDemo:
         self.target_entry = tk.Entry(root, width=20)
         self.target_entry.grid(row=1, column=1, padx=10, pady=5)
         
-        # Botón para iniciar la búsqueda
+        # se crea el botón para iniciar la búsqueda
         self.search_button = tk.Button(root, text="Buscar", command=self.start_search)
         self.search_button.grid(row=2, column=1, padx=10, pady=10)
 
-        # Área de resultados de texto
+        # se crea el área de resultados de texto
         self.result_text = tk.Text(root, height=10, width=60, state="disabled")
         self.result_text.grid(row=3, column=0, columnspan=2, padx=10, pady=5)
 
-        # Canvas para visualización gráfica
+        # se usa canvas para visualización gráfica
         self.canvas = tk.Canvas(root, width=1000, height=200, bg="white")
         self.canvas.grid(row=4, column=0, columnspan=2, padx=10, pady=10)
 
@@ -48,9 +51,9 @@ class BinarySearchDemo:
 
     def draw_array(self, num_list, low, high, mid):
         """Función para dibujar la lista y destacar los elementos actuales."""
-        self.canvas.delete("all")  # Limpiar el canvas antes de dibujar
+        self.canvas.delete("all")  # se borra la lista
         
-        # Parámetros de dibujo
+        # se especifican los parámetros de dibujo
         rect_width = 40
         start_x = 10
         
@@ -59,7 +62,7 @@ class BinarySearchDemo:
             x1 = x0 + rect_width
             y0, y1 = 20, 70
             
-            # Colores según el estado
+            # se establecen los colores según el estado
             if i == mid:
                 color = "orange"  # Índice medio actual
             elif low <= i <= high:
@@ -70,40 +73,53 @@ class BinarySearchDemo:
             self.canvas.create_rectangle(x0, y0, x1, y1, fill=color, outline="black")
             self.canvas.create_text(x0 + rect_width / 2, (y0 + y1) / 2, text=str(num))
 
-    def binary_search(self, num_list, target):
+    def binary_search(self, num_list, numero_buscado):
         low, high = 0, len(num_list) - 1
-        step = 1  # Contador de pasos
+        step = 1  # se cuentan pasos
         
         while low <= high:
             mid = (low + high) // 2
             self.result_text.insert(tk.END, f"Paso {step}: Buscar en índice {mid} (valor: {num_list[mid]})\n")
-            self.draw_array(num_list, low, high, mid)  # Dibujar estado actual
+            self.draw_array(num_list, low, high, mid)  # estado actual
             
-            # Actualizar interfaz para mostrar paso visual
+            # se actualiza la interfaz para mostrar paso visual
             self.canvas.update()
             self.result_text.update()
             self.root.after(1000)  # Pausa de 1 segundo entre pasos
             
             step += 1
             
-            if num_list[mid] == target:
+            if num_list[mid] == numero_buscado:
                 return mid
-            elif num_list[mid] < target:
+            elif num_list[mid] < numero_buscado:
                 low = mid + 1
-                self.result_text.insert(tk.END, f"   El valor {target} es mayor que {num_list[mid]}, buscar a la derecha.\n")
+                self.result_text.insert(tk.END, f"   El valor {numero_buscado} es mayor que {num_list[mid]}, buscar a la derecha.\n")
             else:
                 high = mid - 1
-                self.result_text.insert(tk.END, f"   El valor {target} es menor que {num_list[mid]}, buscar a la izquierda.\n")
+                self.result_text.insert(tk.END, f"   El valor {numero_buscado} es menor que {num_list[mid]}, buscar a la izquierda.\n")
         
         return -1
 
+def binary_search_f(arr: List[int], target: int) -> Optional[int]:
+    low = 0
+    high = len(arr) - 1
+    
+    while low <= high:
+        mid = (low + high) // 2
+        if arr[mid] == target:
+            return mid
+        elif arr[mid] < target:
+            low = mid + 1
+        else:
+            high = mid - 1
+    return None
 
 def main():
-    # Crear la ventana principal de Tkinter
+    # se crea la ventana principal de Tkinter
     root = tk.Tk()
     app = BinarySearchDemo(root)
     root.mainloop()
 
-# Ejecutar el código solo si es el archivo principal
+# se ejecuta el código solo si es el archivo principal
 if __name__ == "__main__":
     main()

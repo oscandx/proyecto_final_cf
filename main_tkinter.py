@@ -1,9 +1,9 @@
 import tkinter as tk
 from tkinter import messagebox
-import binary_search
-import quicksort
-import recursion
-import selection_sort
+from Algoritmos import binary_search
+from Algoritmos import quicksort
+from Algoritmos import recursion
+from Algoritmos import selection_sort
 
 class AlgorithmSelector:
     def __init__(self, root):
