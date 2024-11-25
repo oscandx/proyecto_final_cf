@@ -10,10 +10,17 @@ class AlgorithmSelector:
         self.root = root
         self.root.title("Selector de Algoritmos")
 
-        # Etiqueta de instrucciones
-        tk.Label(root, text="Selecciona un algoritmo para visualizar:").pack(pady=10)
+        # Se genera una etiqueta de instrucciones
+        tk.Label(root, 
+                 text="""Este programa genera una visualización interactiva de algunos algoritmos más usados en programación.
+                        Selecciona un algoritmo para visualizar:""", 
+                 font=("Comic sans ms", 14)).pack(pady=10)
 
-        # Lista de opciones de algoritmos
+        # Se genera un marco para los botones de selección
+        self.options_frame = tk.Frame(root)
+        self.options_frame.pack(pady=10)
+
+        # Se crea un diccionario con los algoritmos
         self.algorithms = {
             "Búsqueda Binaria": binary_search,
             "Quicksort": quicksort,
@@ -21,34 +28,40 @@ class AlgorithmSelector:
             "Ordenamiento por Selección": selection_sort
         }
         
-        # Variable para almacenar la selección del usuario
+        # Se crea una variable para almacenar la selección del usuario
         self.selected_algorithm = tk.StringVar(root)
-        self.selected_algorithm.set("Búsqueda Binaria")  # Opción por defecto
+        self.selected_algorithm.set("Búsqueda Binaria")  # Por defecto
 
-        # Menú desplegable para seleccionar el algoritmo
-        self.dropdown = tk.OptionMenu(root, self.selected_algorithm, *self.algorithms.keys())
-        self.dropdown.pack(pady=10)
+        # Creación de botones de selección
+        for name in self.algorithms.keys():
+            tk.Radiobutton(
+                self.options_frame,
+                text=name,
+                variable=self.selected_algorithm,
+                value=name,
+                font=("Comic sans ms", 12)
+            ).pack(anchor="w")
 
         # Botón para ejecutar el algoritmo seleccionado
-        self.run_button = tk.Button(root, text="Ejecutar Algoritmo", command=self.run_algorithm)
-        self.run_button.pack(pady=10)
+        self.run_button = tk.Button(root, text="Ejecutar Algoritmo", font=("Comic sans ms", 12), command=self.run_algorithm)
+        self.run_button.pack(pady=20)
 
     def run_algorithm(self):
-        # Obtener el algoritmo seleccionado
+        # Se obtiene el algoritmo seleccionado
         algorithm_name = self.selected_algorithm.get()
         algorithm_module = self.algorithms.get(algorithm_name)
 
         # Confirmación de ejecución
         if messagebox.askyesno("Confirmación", f"¿Quieres ejecutar el algoritmo '{algorithm_name}'?"):
             try:
-                # Ejecutar el archivo del algoritmo seleccionado
-                algorithm_module.main()  # Llama a la función principal en cada archivo de algoritmo
+                # Se ejecuta la función principal del algoritmo seleccionado
+                algorithm_module.main()  # Supone que cada módulo tiene una función `main()`
             except AttributeError:
                 messagebox.showerror("Error", f"No se pudo encontrar la función 'main' en {algorithm_name}")
             except Exception as e:
                 messagebox.showerror("Error", f"Ha ocurrido un error al ejecutar {algorithm_name}:\n{e}")
 
-# Crear la ventana principal
+# Creación de la ventana principal
 root = tk.Tk()
 app = AlgorithmSelector(root)
 root.mainloop()
